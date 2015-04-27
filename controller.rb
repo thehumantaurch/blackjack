@@ -1,4 +1,3 @@
-require 'pry'
 require_relative 'model'
 require_relative 'view'
 
@@ -37,21 +36,7 @@ class Controller
     end
   end
 
-  def show_dealer_hand
-    puts
-    puts "Dealer's final hand:"
-    @dealer.hand.each do |card|
-      puts "\t#{card.number} of #{card.suit}"
-    end
-  end
 
-  def show_player_hand
-    puts
-    puts "Your final hand:"
-    @player.hand.each do |card|
-      puts "\t#{card.number} of #{card.suit}"
-    end
-  end
 
   def hand_total(player)
     hand_nums = []
@@ -78,40 +63,6 @@ class Controller
     return player.total
   end
 
-  def check_winner(final_player, final_dealer)
-    if final_player == 21 && final_dealer == 21
-      puts
-      puts "Wow! You both got blackjack!"
-    elsif final_player == 21
-      puts
-      puts "Congratulations, you win!"
-    elsif final_dealer == 21
-      puts
-      puts "Sorry, you lose."
-    elsif final_player > 21 && final_dealer < 21
-      puts
-      puts "Sorry, you lose."
-    elsif final_player < 21 && final_dealer > 21
-      puts
-      puts "Congratulations, you win!"
-    elsif final_player > 21 && final_dealer > 21
-      puts
-      puts "You're both bust. The dealer wins."
-    elsif final_player < 21 && final_dealer < 21
-      if final_player > final_dealer
-        puts
-        puts "Congratulations, you win!"
-      elsif final_player == final_dealer
-        puts
-        puts "It's a tie!"
-      else
-        puts
-        puts "Sorry, you lose."
-      end
-    end
-  end
-
-
   def run
     @view.start_game
     deal
@@ -130,12 +81,17 @@ class Controller
     end
     final_player = hand_total(@player)
     final_dealer = hand_total(@dealer)
-    show_player_hand
-    show_dealer_hand
-    check_winner(final_player, final_dealer)
+
+    puts "Your final hand:"
+    @view.show_final_hand(@player)
+
+    puts "Dealer's final hand:"
+    @view.show_final_hand(@dealer)
+
+    @view.check_winner(final_player, final_dealer)
   end
 
 end
 
-test = Controller.new
-test.run
+play = Controller.new
+play.run
